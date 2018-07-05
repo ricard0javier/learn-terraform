@@ -42,6 +42,12 @@ resource "aws_lambda_function" "example" {
   handler = "main.handler"
   runtime = "nodejs6.10"
   role = "${aws_iam_role.lambda_exec.arn}"
+
+  environment {
+    variables = {
+      CTS_CUSTOM_PROPERTY = "Comcast"
+    }
+  }
 }
 
 resource "aws_api_gateway_rest_api" "example" {
@@ -97,4 +103,17 @@ resource "aws_api_gateway_deployment" "example" {
 
   rest_api_id = "${aws_api_gateway_rest_api.example.id}"
   stage_name  = "test"
+}
+
+
+resource "aws_lambda_permission" "apigw" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.example.arn}"
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_api_gateway_deployment.example.execution_arn}/*/*"
+}
+
+output "base_url" {
+  value = "${aws_api_gateway_deployment.example.invoke_url}"
 }
