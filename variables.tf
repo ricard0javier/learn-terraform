@@ -1,2 +1,2 @@
-variable "lamdaZipFile" {}
-variable "lamdaZipS3Key" {}
+variable "lamdaZipFile" {
+}

@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "zip": "node src/build/javascript/archiver.js src/main/javascript/ ${PWD}/target/learn-terraform.zip",
-    "upload": "terraform apply -var=\"lamdaZipFile=${PWD}/target/learn-terraform.zip\" -var=\"lamdaZipS3Key=learn-terraform.zip\""
+    "deploy": "terraform taint aws_lambda_function.example && terraform apply -auto-approve -var=\"lamdaZipFile=${PWD}/target/learn-terraform.zip\""
   },
   "devDependencies": {
     "archiver": "^2.1.1",
