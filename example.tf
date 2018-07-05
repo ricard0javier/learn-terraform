@@ -4,16 +4,14 @@ provider "aws" {
   profile    = "tp-cts-intl-ps-ote-prod"
 }
 
-resource "aws_instance" "example" {
-  ami           = "ami-b374d5a5"
-  instance_type = "t2.micro"
-
-  provisioner "local-exec" {
-    command = "echo ${aws_instance.example.public_ip} > ip_address.txt"
-  }
+resource "aws_s3_bucket" "example" {
+  bucket = "cts-intl-ps-rvillanueva"
+  acl    = "private"
 }
 
-resource "aws_eip" "ip" {
-  instance = "${aws_instance.example.id}"
+resource "aws_s3_bucket_object" "object" {
+  bucket = "${aws_s3_bucket.example.bucket}"
+  key    = "${var.lamdaZipS3Key}"
+  source = "${var.lamdaZipFile}"
+  etag   = "${md5(file("${var.lamdaZipFile}"))}"
 }
-
